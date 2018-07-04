@@ -34,6 +34,12 @@ A função *process_canny* e *process_morphology* processam a imagem recebida de
 
 O problema que surge quando se aplica o algoritmo de *Canny* resulta da possível deteção de bordas noutras partes da imagem que também tenham variações bruscas de intensidades (altas frequências). Devido à sensibilidade do algoritmo a zonas de alta frequência, zonas com casas com cores muito diferentes ou com nuvens são passíveis de serem detetadas como sendo estradas, o que resulta numa imagem que não representa só as estradas. Para tentar combater esse problema, tentamos aplicar uma série de técnicas para tentar diminuir as deteções do algoritmo.
 
+Tentamos fazer uma equalização do histograma para melhor ditribuir as diferentes intensidades. No entanto, a utilização desta técnica piorou os resultados, resultando numa imagem com demasiadas deteções.
+
+<p>
+  <img src="imagens/resultado1.png" width="500" />
+</p>
+
 Começamos por fazer uma *gamma correction* para tentar melhorar o contraste da imagem, para que as estradas pudessem ter um maior contraste enquanto o resto teria um contraste diminuído. Esta operação resulta numa imagem um pouco melhor do que aplicando o *Canny* na imagem original, mas mesmo assim ainda sofre do problema da deteção de vários objetos diferentes que não correspondem a estradas.
 
 Utilizamos ainda uma técnica de deteção de pontos claros na imagem. Essa função, quando aplicada, remove as partes mais claras da imagem.Como as estradas não têm intensidades próximas das apresentadas nas nuvens, em princípio não ocorrerá em nenhum caso a eliminação de estradas da imagem.
@@ -41,30 +47,21 @@ Utilizamos ainda uma técnica de deteção de pontos claros na imagem. Essa fun�
 Depois de fazer a *gamma correction*, a imagem ficou da seguinte forma:
 
 <p>
-  <img src="imagens/resultado1.png" width="320" />
+  <img src="imagens/resultado3.png" width="500" />
 </p>
 
-Outro exemplo (sem nuvens):
-
-<p>
-  <img src="exemplos/exemplo2_original.png" width="320" />
-  <img src="exemplos/exemplo1_gamma_nc.png" width="320" />
-</p>
-
-Como se pode ver nos dois exemplos, o problema nas deteções, em grande parte, continua a ser as casas que têm muito contraste com o meio envolvente. Teriam de ser usados métodos mais sofisticados de processamento de imagem para conseguir obter melhores resultados.
+Como se pode ver, o problema nas deteções, em grande parte, continua a ser as casas que têm muito contraste com o meio envolvente. Teriam de ser usados métodos mais sofisticados de processamento de imagem para conseguir obter melhores resultados.
 
 Numa tentativa final de melhorar os resultados diminuindo as frequências gerais da imagem, foi passado um filtro passa-baixo (gaussiano) com o *kernel* de 5 por 5. Como esse filtro diminui a variação brusca das intensidades em píxeis adjacentes, o resultado consiste numa menor frequência geral e, assim, na menor deteção de bordas pelo algoritmo.
 
 As imagens seguintes correspondem às imagens anteriores com a única alteração sendo a passagem do resultado, antes do algoritmo de *Canny* ser aplicado, de um filtro passa-baixo:
 
 <p>
-  <img src="exemplos/exemplo1_original.png" width="320" />
-  <img src="exemplos/exemplo1_gamma_gauss.png" width="320" />
+  <img src="imagens/resultado4.png" width="500" />
 </p>
 
 <p>
-  <img src="exemplos/exemplo2_original.png" width="320" />
-  <img src="exemplos/exemplo2_gamma_gauss.png" width="320" />
+  <img src="imagens/resultado2.png" width="500" />
 </p>
 
 A última imagem sofreu uma perda considerável das estradas porque o filtro passa-baixo fez um *blur* demasiado elevado na imagem original,resultando numa borda demasiado suave para ser detetada.
