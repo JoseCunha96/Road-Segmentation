@@ -41,7 +41,7 @@ Utilizamos ainda uma técnica de deteção de pontos claros na imagem. Essa fun�
 Depois de fazer a *gamma correction*, a imagem ficou da seguinte forma:
 
 <p>
-  <img src="exemplos/exemplo1_original.png" width="100" />
+  <img src="imagens/resultado1.png" width="320" />
 </p>
 
 Outro exemplo (sem nuvens):
