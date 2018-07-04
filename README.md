@@ -37,7 +37,7 @@ O problema que surge quando se aplica o algoritmo de *Canny* resulta da possíve
 Tentamos fazer uma equalização do histograma para melhor ditribuir as diferentes intensidades. No entanto, a utilização desta técnica piorou os resultados, resultando numa imagem com demasiadas deteções.
 
 <p>
-  <img src="imagens/resultado1.png" width="500" />
+  <img src="imagens/resultado1.png" width="700" />
 </p>
 
 Começamos por fazer uma *gamma correction* para tentar melhorar o contraste da imagem, para que as estradas pudessem ter um maior contraste enquanto o resto teria um contraste diminuído. Esta operação resulta numa imagem um pouco melhor do que aplicando o *Canny* na imagem original, mas mesmo assim ainda sofre do problema da deteção de vários objetos diferentes que não correspondem a estradas.
@@ -47,7 +47,7 @@ Utilizamos ainda uma técnica de deteção de pontos claros na imagem. Essa fun�
 Depois de fazer a *gamma correction*, a imagem ficou da seguinte forma:
 
 <p>
-  <img src="imagens/resultado3.png" width="500" />
+  <img src="imagens/resultado3.png" width="700" />
 </p>
 
 Como se pode ver, o problema nas deteções, em grande parte, continua a ser as casas que têm muito contraste com o meio envolvente. Teriam de ser usados métodos mais sofisticados de processamento de imagem para conseguir obter melhores resultados.
@@ -57,11 +57,11 @@ Numa tentativa final de melhorar os resultados diminuindo as frequências gerais
 As imagens seguintes correspondem às imagens anteriores com a única alteração sendo a passagem do resultado, antes do algoritmo de *Canny* ser aplicado, de um filtro passa-baixo:
 
 <p>
-  <img src="imagens/resultado4.png" width="500" />
+  <img src="imagens/resultado4.png" width="700" />
 </p>
 
 <p>
-  <img src="imagens/resultado2.png" width="500" />
+  <img src="imagens/resultado2.png" width="700" />
 </p>
 
 A última imagem sofreu uma perda considerável das estradas porque o filtro passa-baixo fez um *blur* demasiado elevado na imagem original,resultando numa borda demasiado suave para ser detetada.
