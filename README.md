@@ -42,7 +42,6 @@ Depois de fazer a *gamma correction*, a imagem ficou da seguinte forma:
 
 <p>
   <img src="exemplos/exemplo1_original.png" width="320" />
-  <img src="exemplos/exemplo1_gamma.png" width="320" />
 </p>
 
 Outro exemplo (sem nuvens):
