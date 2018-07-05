@@ -46,18 +46,6 @@ def process_canny(image, equalize, correct, remove_white):
     return image
 
 
-#processa a imagem para tentar extrair informações de estradas com algoritmos de morfologia matemática
-def process_morpholgical(image):
-    equalized = adaptative_hist_eq(image)
-    gamma_corrected = gamma_correction(equalized,1.5)    
-    kernel = np.ones((3,3),np.uint8)
-    blurred = cv2.GaussianBlur(gamma_corrected,(5,5),0)
-    otsu_image = otsu(blurred)
-    eroded = cv2.erode(otsu_image, kernel, iterations=1)
-    dilated = cv2.dilate(eroded, kernel, iterations=1)
-    return dilated
-
-
 def gamma_correction(image, gamma):
     invGamma = 1.0 / gamma
     table = np.array([((i / 255.0) ** invGamma) * 255
