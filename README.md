@@ -2,7 +2,7 @@
 
 ## Segmentação de estradas em imagens do Sentinel-2
 
-### Descrição do problema
+### Problemática
 
 Este projeto tem como principal objetivo a obtenção de um mapa de estradas a partir do processamento de um conjunto de imagens provenientes do satélite Sentinel-2, utilizando para isso técnicas de processamento de imagem com a ajuda da ferramenta **OpenCV** no **Python**.
 
@@ -17,39 +17,39 @@ De forma a simplificar a avaliação dos resultados optamos por dividir em secç
 
 De forma a determinar que imagens usar, utilizamos o **QGIS** para fazer a análise das mesmas. Optamos por utilizar então a imagem **TCI**.
 
-A aplicação, denominada *canny.py*, lê da pasta *R10m* a imagem adequada e determina depois mediante os argumentos passados que técnica utilizar.
+A aplicação, *codigo.py*, faz a leitura da imagem adequada da pasta *R10m* e determina, mediante os argumentos passados, que técnica utilizar para a obtenção de melhores resultados.
 
 #### Funções e API's utilizadas
 
-Para poder aplicar os algoritmos necessários, tivemos de recorrer à API *gdal*, que é usada para ler os ficheiros *.jp2*. Para além dessa,usamos **APIs** comuns como *numpy*, *cv2* e *matplotlib*.
+Para poder aplicar os algoritmos necessários, recorremos à API *gdal*, que é utilizada para ler os ficheiros com a extensão *.jp2*. Para além dessa, utilizamos também as bibliotecas *numpy*, *cv2* e *matplotlib*.
 
 As função principal do programa é a *segment_roads*, que divide a imagem em partes mais pequenas e itera por cada uma aplicando o algoritmo de segmentação.
 
-A função *process_canny* e *process_morphology* processam a imagem recebida de forma a produzir uma imagem com a segmentação efetuada, mas usando métodos distintos (será detalhado à frente).
+A função *process_canny* e *process_morphology* processam a imagem recebida de forma a produzir uma imagem com a segmentação efetuada, mas com distintos modos de funcionamento.
 
-#### Algoritmo de Canny
+#### Implementação do algoritmo de Canny
 
-O problema que surge quando se aplica o algoritmo de *Canny* resulta da possível deteção de bordas noutras partes da imagem que também tenham variações bruscas de intensidades (altas frequências). Devido à sensibilidade do algoritmo a zonas de alta frequência, zonas com casas com cores muito diferentes ou com nuvens são passíveis de serem detetadas como sendo estradas, o que resulta numa imagem que não representa só as estradas. Para tentar combater esse problema, tentamos aplicar uma série de técnicas para tentar diminuir as deteções do algoritmo.
+O problema que surge ao aplicar o algoritmo de *Canny* provém da possibilidade de deteção de bordas noutras partes da imagem que tenham variações bruscas de intensidades (altas frequências). Devido a uma ligeira sensibilidade do algoritmo a zonas de alta frequência, em que por exemplo, as cores das casas sejam muito díspares ou na existência de nuvens que possam ser detetadas como sendo estradas, o que resulta numa imagem que deteta mais coisas do que devia, ou seja deteta mais do que as estadas. 
 
-Tentamos fazer uma equalização do histograma para melhor ditribuir as diferentes intensidades. No entanto, a utilização desta técnica piorou os resultados, resultando numa imagem com demasiadas deteções.
+Inicialmente fizemos uma equalização do histograma para melhor ditribuir as diferentes intensidades. No entanto, o resultado obtido tinha mais "estradas" do que era suposto, isto porque detetou demasiadas coisas que não estradas.
 
 <p>
   <img src="imagens/resultado1.png" width="700" />
 </p>
 
-Começamos por fazer uma *gamma correction* para tentar melhorar o contraste da imagem, para que as estradas pudessem ter um maior contraste enquanto o resto teria um contraste diminuído. Esta operação resulta numa imagem um pouco melhor do que aplicando o *Canny* na imagem original, mas mesmo assim ainda sofre do problema da deteção de vários objetos diferentes que não correspondem a estradas.
+De seguida experimentamos fazer uma *gamma correction* para tentar melhorar o contraste da imagem. O resultado obtido foi de facto melhor do que a primeira tentativa no entanto ainda se notava que existiam demasiadas deteções de objetos que não eram estradas.
 
-Utilizamos ainda uma técnica de deteção de pontos claros na imagem. Essa função, quando aplicada, remove as partes mais claras da imagem.Como as estradas não têm intensidades próximas das apresentadas nas nuvens, em princípio não ocorrerá em nenhum caso a eliminação de estradas da imagem.
+Por fim utilizamos uma técnica de deteção de pontos claros na imagem. Esta função, quando aplicada, remove as partes mais claras da imagem. Como de facto, as estradas não apresentam intensidades próximas das apresentadas nas nuvens, em princípio não ocorrerá a eliminação de estradas no resultado final.
 
-Depois de fazer a *gamma correction*, a imagem ficou da seguinte forma:
+Depois utilizarmos a técnica de *gamma correction*, a imagem resultante foi esta:
 
 <p>
   <img src="imagens/resultado3.png" width="700" />
 </p>
 
-Como se pode ver, o problema nas deteções, em grande parte, continua a ser as casas que têm muito contraste com o meio envolvente. Teriam de ser usados métodos mais sofisticados de processamento de imagem para conseguir obter melhores resultados.
+Analisando a imagem resultante, denotamos que o problema nas deteções, em grande parte, continua a ser nas casas que têm muito contraste com o meio envolvente.
 
-Numa tentativa final de melhorar os resultados diminuindo as frequências gerais da imagem, foi passado um filtro passa-baixo (gaussiano) com o *kernel* de 5 por 5. Como esse filtro diminui a variação brusca das intensidades em píxeis adjacentes, o resultado consiste numa menor frequência geral e, assim, na menor deteção de bordas pelo algoritmo.
+Numa tentativa final de melhorar os resultados diminuindo as frequências gerais da imagem, foi passado um filtro passa-baixo (gaussiano) com o *kernel* de 5 por 5. Este filtro diminui a variação brusca das intensidades em píxeis adjacentes, logo será de esperar que o resultado consista numa menor frequência geral e, assim, numa menor deteção de bordas.
 
 As imagens seguintes correspondem às imagens anteriores com a única alteração sendo a passagem do resultado, antes do algoritmo de *Canny* ser aplicado, de um filtro passa-baixo:
 
@@ -62,11 +62,6 @@ As imagens seguintes correspondem às imagens anteriores com a única alteraçã
 </p>
 
 A última imagem sofreu uma perda considerável das estradas porque o filtro passa-baixo fez um *blur* demasiado elevado na imagem original,resultando numa borda demasiado suave para ser detetada.
-
-
-#### Algoritmo com operações morfológicas
-
-Embora não tenha sido mostrado neste *readme*, uma vez que os resultados não tinham grande qualidade, foi também implementado um outro método denominado *process_morphology* que tenta fazer a segmentação recorrendo a operações morfológicas e não com o algoritmo de *Canny*. Para que tal possa ser executado, basta modificar a função *segment_roads* para invocar, no ciclo, a função *process_morphology* em vez da função *process_canny*.
 
 ### Conclusão
 
